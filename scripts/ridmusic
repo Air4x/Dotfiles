@@ -1,0 +1,36 @@
+#!/usr/bin/python
+
+import os
+
+path = os.getcwd()
+
+print (path)
+
+files = []
+
+for r, d, f in os.walk(path):
+    for file in f:
+        if '.mp3' in file:
+            files.append(file)
+
+print(files)
+
+for i in files:
+    sclice = i[-16:]
+    newname = i.replace(sclice, "")
+    os.rename(i, newname)
+
+files.clear()
+
+for r, d, f in os.walk(path):
+    for file if f:
+        files.append(file)
+
+ex = ".mp3"
+
+for i in files:
+    completename = i + ex
+    os.rename(i, completename)
+
+
+

@@ -2,6 +2,10 @@
 # wm independent hotkeys
 #
 
+##
+## programs hotkeys
+##
+
 # terminal emulator
 super + Return
 	termite
@@ -13,9 +17,18 @@ super + @space
 # firefox
 super + ctrl + f
     firefox
-# make sxhkd reload its configuration files:
-super + Escape
-	pkill -USR1 -x sxhkd
+
+# emacsclient
+super + ctrl + e
+	  emacsclient -c
+
+# notetaking in nvim
+super + n
+	  Note-Taking.sh
+
+##
+## hardware dependent hotkeys
+##s
 
 # volume control for my lenovo 50-45
 XF86AudioRaiseVolume
@@ -26,6 +39,14 @@ XF86AudioLowerVolume
 
 XF86AudioMute
     pactl set-sink-mute @DEFAULT_SINK@ toggle
+
+##
+## sxhkd hotkeys
+##
+# make sxhkd reload its configuration files:
+super + Escape
+	pkill -USR1 -x sxhkd
+
 #
 # bspwm hotkeys
 #

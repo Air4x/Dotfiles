@@ -20,36 +20,26 @@ runtime! archlinux.vim
 if (has("termguicolors"))
   set termguicolors
 endif
+set nocompatible
 
 "Settings for all the file
 set number relativenumber
-
 set encoding=utf-8
-
+filetype plugin on
+set path+=**
+set wildmenu
 "Options for colorscheme
 syntax on
-
-"set background=dark
-
 colorscheme monokai-bold
-
-"let g:lightline = { 'colorscheme': 'palenight' }
-
-"let g:airline_theme = "palenight"
-
 "Mouse options
 set mouse=a
-
 " Setting for TAB
 set tabstop=4
-
 set shiftwidth=4
-
 set expandtab
-
 "Plugins, all installed manualy
-source /home/marioc/.vim/pack/vendor/start/autoclose.vim
-source /home/marioc/.vim/pack/vendor/start/stl.vim
+source ~/.config/nvim//scripts/autoclose.vim
+source ~/.config/nvim/scripts/stl.vim
 
 "Plugins, with Vim-Plug
 call plug#begin()

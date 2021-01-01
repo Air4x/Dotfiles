@@ -26,6 +26,10 @@ super + ctrl + e
 super + n
 	  Note-Taking.sh
 
+# chose a note to read
+super + shift + r
+      Read-Note.sh
+
 ##
 ## hardware dependent hotkeys
 ##s

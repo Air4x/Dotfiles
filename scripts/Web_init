@@ -1,6 +1,0 @@
-#!/bin/bash
-
-mkdir html
-mkdir img
-
-cp ~/Modelli/html.html index.html

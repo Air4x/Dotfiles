@@ -1,3 +1,3 @@
 function lc
-    command ls -1 --color=auto $argv
+    command exa --oneline --classify $argv
 end

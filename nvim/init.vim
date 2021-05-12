@@ -17,10 +17,7 @@ runtime! archlinux.vim
 " do not load defaults if ~/.vimrc is missing
 "let skip_defaults_vim=1
 
-if (has("termguicolors"))
-  set termguicolors
-endif
-set nocompatible
+set termguicolors
 
 "Settings for all the file
 set number relativenumber
@@ -30,21 +27,62 @@ set path+=**
 set wildmenu
 "Options for colorscheme
 syntax on
-colorscheme monokai-bold
 "Mouse options
 set mouse=a
 " Setting for TAB
 set tabstop=4
 set shiftwidth=4
 set expandtab
+
+set clipboard+=unnamedplus
+
 "Plugins, all installed manualy
 source ~/.config/nvim//scripts/autoclose.vim
 source ~/.config/nvim/scripts/stl.vim
 
 "Plugins, with Vim-Plug
 call plug#begin()
-
+"markdown
+Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
+"latex
+Plug 'lervag/vimtex'
+"autocompleation
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+"Snippets
+Plug 'honza/vim-snippets'
+"GUI (colorscheme and status line)
+Plug 'morhetz/gruvbox'
+Plug 'sheerun/vim-polyglot'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+"Plug 'stevearc/vim-arduino'
+Plug 'vimwiki/vimwiki'
 call plug#end()
 
+let mapleader = "<F2>"
 
+colorscheme gruvbox
+set background=dark
 
+let g:airline_theme = 'gruvbox' 
+
+let g:vimtex_view_method = 'zathura'
+
+let g:vimwiki_list = [{'path': '~/Documenti/Vimwiki/vimwiki', 'path_html': '~/Documenti/Vimwiki/Html/'}]
+
+" Use <C-l> for trigger snippet expand.
+imap <C-l> <Plug>(coc-snippets-expand)
+
+" Use <C-j> for select text for visual placeholder of snippet.
+vmap <C-j> <Plug>(coc-snippets-select)
+
+" Use <C-j> for jump to next placeholder, it's default of coc.nvim
+let g:coc_snippet_next = '<c-j>'
+
+" Use <C-k> for jump to previous placeholder, it's default of coc.nvim
+let g:coc_snippet_prev = '<c-k>'
+
+" Use <C-j> for both expand and jump (make expand higher priority.)
+imap <C-j> <Plug>(coc-snippets-expand-jump)
+
+let g:rust_fold=1

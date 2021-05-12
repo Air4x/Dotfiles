@@ -1,7 +1,7 @@
 #!/bin/sh
 
 #launching polybar by the script from https://github.com/adi1090x/polybar-themes
-~/.config/polybar/launch.sh
+$HOME/.config/polybar/launch.sh
 
 ## sxhkd
 #killing sxhkd
@@ -29,20 +29,23 @@ nm-applet &
 #killing picom
 killall -q picom
 #waiting until the process has been shut down
-while pgrep -u $UID -x picom > /dev/null 
-do 
-    sleep 1 
-done
-#launching picom
-picom &
-
-## emacs as a server
-#killing emacs
-killall -q emacs
-#waiting until the process has been shut down
-while pgrep -u $UID -x emacs > /dev/null
+while pgrep -u $UID -x picom > /dev/null
 do
     sleep 1
 done
-#launching emacs
-emacs --bg-deamon &
+#launching picom
+picom --experimental-backends &
+
+dunst &
+
+redshift-gtk &
+## emacs as a server
+#killing emacs
+#killall -q emacs
+##waiting until the process has been shut down
+#while pgrep -u $UID -x emacs > /dev/null
+#do
+#    sleep 1
+#done
+##launching emacs
+#emacs --bg-daemon &

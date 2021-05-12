@@ -1,3 +1,3 @@
 function ll
-    command ls -l --color=auto $argv
+    command exa --long --all --sort=type --reverse $argv
 end

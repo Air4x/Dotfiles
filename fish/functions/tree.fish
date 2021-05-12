@@ -1,3 +1,3 @@
 function tree
-    command tree -C $argv
+    command exa --tree --classify $argv
 end

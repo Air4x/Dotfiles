@@ -35,7 +35,7 @@ from libqtile.utils import guess_terminal
 from libqtile.window import Window
 
 mod = "mod4"
-terminal = guess_terminal()
+terminal = "alacritty"
 
 colors = [["#0f111b", "#0f111b"], # background 0
           ["#0f111b", "#2e3459"], # black 1

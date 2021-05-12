@@ -8,11 +8,14 @@
 
 # terminal emulator
 super + Return
-	termite
+	alacritty
 
 # program launcher
 super + @space
-   	rofi -show run
+   	rofi -show drun -icon-theme "Papirus" -show-icons
+
+super + shift + @space
+	rofi -show run
 
 # firefox
 super + ctrl + f
@@ -20,23 +23,28 @@ super + ctrl + f
 
 # emacsclient
 super + ctrl + e
-	  emacsclient -c
-
+    emacs
+super + ctrl + m
+    MPD-menu.sh
 # notetaking in nvim
 super + n
-	  Note-Taking.sh
+    Note-Taking.sh
+
+# opening lf
+super + f
+	  termite --class=float -e lf
 
 # chose a note to read
 super + shift + r
-      Read-Note.sh
+    Read-Note.sh
 
 ##
 ## hardware dependent hotkeys
-##s
+##
 
-# volume control for my lenovo 50-45
+# volume control with multimedia keys
 XF86AudioRaiseVolume
-    pactl set-sink-volume @DEFAULT_SINK@ +5%
+   pactl set-sink-volume @DEFAULT_SINK@ +5%
 
 XF86AudioLowerVolume
     pactl set-sink-volume @DEFAULT_SINK@ -5%
@@ -44,6 +52,14 @@ XF86AudioLowerVolume
 XF86AudioMute
     pactl set-sink-mute @DEFAULT_SINK@ toggle
 
+#XF86AudioPLay
+#    mpc play
+
+# backlight control with multimedia keys
+XF86MonBrightnessDown
+	LowerLuce.sh
+XF86MonBrightnessUp
+	IncreaseLuce.sh
 ##
 ## sxhkd hotkeys
 ##

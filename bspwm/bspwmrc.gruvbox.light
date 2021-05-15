@@ -5,7 +5,7 @@
 xset -b
 xwallpaper --maximize ~/Immagini/Wallpapers/GruvboxLight.png
 
-bspc monitor -d 1 2 3 4 5  
+bspc monitor -d Term Browse Chat Junk1 Junk2  
 
 bspc config border_width         2
 bspc config window_gap           4
@@ -22,6 +22,7 @@ bspc config focus_follows_pointer    true
 
 
 bspc rule -a Chromium desktop='^2'
+bspc rule -a Brave-browser desktop='^2'
 bspc rule -a mpv state=tiled
 bspc rule -a Emacs state=tiled
 bspc rule -a note-taking state=floating

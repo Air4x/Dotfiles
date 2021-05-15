@@ -1,7 +1,7 @@
 #!/bin/sh
 
 #launching polybar by the script from https://github.com/adi1090x/polybar-themes
-$HOME/.config/polybar/launch.sh
+$HOME/.config/polybar/material/launch.sh
 
 ## sxhkd
 #killing sxhkd

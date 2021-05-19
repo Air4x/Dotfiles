@@ -36,8 +36,19 @@ done
 #launching picom
 picom --experimental-backends &
 
+
+killall -q dunst
+while pgrep -u $UID -x dunst > /dev/null
+do
+    sleep 1
+done
 dunst &
 
+killall -q redshift-gtk
+while pgrep -u $UID -x redshift-gtk > /dev/null
+do
+    sleep 1
+done
 redshift-gtk &
 ## emacs as a server
 #killing emacs

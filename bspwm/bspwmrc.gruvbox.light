@@ -3,7 +3,7 @@
 ~/.config/bspwm/scripts/autostart.sh
 #chaos_wallpaper
 xset -b
-xwallpaper --maximize ~/Immagini/Wallpapers/GruvboxLight.png
+xwallpaper --zoom ~/Immagini/Wallpapers/0302.jpg
 
 bspc monitor -d Term Browse Chat Junk1 Junk2  
 
@@ -27,4 +27,4 @@ bspc rule -a mpv state=tiled
 bspc rule -a Emacs state=tiled
 bspc rule -a note-taking state=floating
 bspc rule -a Zathura state=tiled
-bspc rule -a float state=floating
+bspc rule -a Alacritty:float state=floating

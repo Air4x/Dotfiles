@@ -62,7 +62,7 @@ call plug#end()
 let mapleader = "<F2>"
 
 colorscheme gruvbox
-set background=dark
+set background=light
 
 let g:airline_theme = 'gruvbox' 
 

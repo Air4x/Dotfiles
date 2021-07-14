@@ -1,5 +1,5 @@
 require'nvim-treesitter.configs'.setup {
-  ensure_installed = { "rust", "javascript", "python", "bash", "css", "html", "lua" }, -- one of "all", "maintained" (parsers with maintainers), or a list of languages
+  ensure_installed = { "rust", "javascript", "python", "bash", "css", "html", "lua", "haskell" }, -- one of "all", "maintained" (parsers with maintainers), or a list of languages
   ignore_install = {}, -- List of parsers to ignore installing
   highlight = {
     enable = true, -- false will disable the whole extension

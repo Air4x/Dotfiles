@@ -78,7 +78,7 @@ window:
   title: Alacritty
 
   # Allow terminal applications to change Alacritty's window title.
-  dynamic_title: false
+  dynamic_title: true
 
   # Window class (Linux/BSD only):
   class:
@@ -287,8 +287,8 @@ schemes:
       magenta: '0xff5faf'
       cyan:    '0x00afaf'
       white:   '0x5f8787'
-      
-colors: *paper_light
+
+colors: *paper_dark
   # Default colors
   #primary:
   #  background: '#1d1f21'
@@ -539,6 +539,7 @@ mouse:
   # If this is `true`, the cursor is temporarily hidden when typing.
   hide_when_typing: false
 
+hints:
   url:
     # URL launcher
     #
@@ -552,7 +553,7 @@ mouse:
     #   - (Linux/BSD) xdg-open
     #   - (Windows) explorer
     #launcher:
-      program: brave
+      program: firefox
       args: []
 
     # URL modifiers

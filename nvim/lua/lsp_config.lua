@@ -1,6 +1,6 @@
 -- lsp config --
 --- rust
-require'lspconfig'.rls.setup{}
+require'lspconfig'.rust_analyzer.setup{}
 
 --- bash
 require'lspconfig'.bashls.setup{}

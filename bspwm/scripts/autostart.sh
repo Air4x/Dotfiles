@@ -1,5 +1,8 @@
 #!/bin/sh
 
+rm /home/mario/.config/polybar/material/config.ini
+ln -s /home/mario/.config/polybar/material/config.bspwm.ini /home/mario/.config/polybar/material/config.ini
+
 #launching polybar by the script from https://github.com/adi1090x/polybar-themes
 $HOME/.config/polybar/material/launch.sh
 
@@ -7,20 +10,20 @@ $HOME/.config/polybar/material/launch.sh
 #killing sxhkd
 killall -q sxhkd
 #waiting until the process has been shut down
-while pgrep -u $UID -x sxhkd > /dev/null 
+while pgrep -u $UID -x sxhkd > /dev/null
 do
     sleep 1
 done
 #launching sxhkd
 sxhkd &
 
-## nm-applet 
+## nm-applet
 #killing nm-applet
 killall -q nm-applet
 #waiting until the process has been shut down
-while pgrep -u $UID -x nm-applet > /dev/null 
+while pgrep -u $UID -x nm-applet > /dev/null
 do
-    sleep 1 
+    sleep 1
 done
 #launching nm-applet
 nm-applet &
@@ -50,6 +53,7 @@ do
     sleep 1
 done
 redshift-gtk &
+
 ## emacs as a server
 #killing emacs
 #killall -q emacs

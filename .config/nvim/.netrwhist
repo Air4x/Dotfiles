@@ -1,0 +1,9 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhistcnt =7
+let g:netrw_dirhist_7='/home/mario/Dotfiles/bspwm'
+let g:netrw_dirhist_6='/home/mario/.config/polybar'
+let g:netrw_dirhist_5='/home/mario/Documenti/Progetti/Lua/Lua5.4'
+let g:netrw_dirhist_4='/home/mario/Documenti/Progetti/Libri/Lua5.3_Ita'
+let g:netrw_dirhist_3='/home/mario/Documenti/Progetti/Libri'
+let g:netrw_dirhist_2='/home/mario/.config/bspwm/scripts'
+let g:netrw_dirhist_1='/home/mario/.config/bspwm'

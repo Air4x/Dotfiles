@@ -217,14 +217,13 @@ myEventHook = mempty
 --
 -- By default, do nothing.
 myStartupHook =do
-            spawnOnce "xwallpaper --zoom ~/Immagini/Wallpapers/Dragon_Red.png"
+            spawnOnce "xwallpaper --zoom ~/Immagini/Wallpapers/0010.jpg"
             spawnOnce "xsetroot -cursor_name left_ptr"
             spawnOnce "nm-applet &"
             spawnOnce "picom --experimental-backends &"
             spawnOnce "dunst &"
             spawnOnce "redshift-gtk &"
             spawnOnce "stalonetray &"
-            spawnOnce "pasytray &"
 ------------------------------------------------------------------------
 
 ------------------------------------------------------------------------

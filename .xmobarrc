@@ -18,7 +18,7 @@ Config {
    -- layout
    , sepChar =  "%"   -- delineator between plugin names and straight text
    , alignSep = "}{"  -- separator between left-right alignment
-   , template = "<icon=haskell_20.xpm/> %StdinReader% }{ %LIRM% | %coretemp% | %memory% | %dynnetwork% | %battery% | %date% | %trayerpad%"
+   , template = "<icon=haskell_20.xpm/> %StdinReader% }{ %mpd%  %LIRM% | %coretemp% | %memory% | %dynnetwork% | %battery% | %date% | %trayerpad%"
 
    -- general behavior
    , lowerOnStart =     True    -- send to bottom of window stack on start
@@ -107,6 +107,7 @@ Config {
         --   (%F = y-m-d date, %a = day of week, %T = h:m:s time)
         , Run Date           "<fc=#ffffff>%d-%m-%y (%a) %T</fc>" "date" 10
         , Run Com "~/.xmonad/stanalonetray-padding.sh" [] "trayerpad" 20
+        , Run MPD ["-t", "<state>: <track>"] 10
 
         -- keyboard layout indicator
         -- , Run Kbd            [ ("us(dvorak)" , "<fc=#00008B>DV</fc>")

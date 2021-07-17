@@ -59,6 +59,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm,               xK_space     ), spawn "rofi -modi drun -show drun -icon-themes 'Papirus' -show-icons" )
     --- A little script to see video in mpv
     , ((modm,                   xK_y ), spawn "~/.Scripts/mpv-clipboard.sh")
+    , ((modm,                   xK_i ), spawn "~/.xmonad/info.sh")
     -----------------------------------------------------------------------
 
     -----------------------------------------------------------------------
@@ -200,13 +201,7 @@ myManageHook = composeAll
 -- combine event hooks use mappend or mconcat from Data.Monoid.
 --
 myEventHook = mempty
-
 ------------------------------------------------------------------------
--- Status bars and logging
-
--- Perform an arbitrary action on each internal state change or X event.
--- See the 'XMonad.Hooks.DynamicLog' extension for examples.
---
 
 ------------------------------------------------------------------------
 -- Startup hook
@@ -229,7 +224,7 @@ myStartupHook =do
 ------------------------------------------------------------------------
 -- The real WM
 main = do
-    h <- spawnPipe "xmobar"
+    h <- spawnPipe "xmobar ~/.xmonad/xmobarrc"
     xmonad (docks def{
       -- simple stuff
         terminal           = myTerminal,

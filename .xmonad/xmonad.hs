@@ -11,6 +11,7 @@ import Data.Monoid
 -- Utils
 import XMonad.Util.Run
 import XMonad.Util.SpawnOnce
+import XMonad.Util.NamedScratchpad
 
 -- Hooks
 import XMonad.Hooks.ManageDocks
@@ -45,7 +46,40 @@ myWorkspaces    = ["core","web","chat","misc1","misc2"]
 
 -- Border colors for unfocused and focused windows, respectively.
 myNormalBorderColor  = "#dddddd"
-myFocusedBorderColor = "#ff0000"
+myFocusedBorderColor = "#ff0000" 
+
+-- Scratchpads 
+scratchpads = [
+    -- NS name cmd query hook
+    NS "ncmpcpp" spawnNcmpcpp findNcmpcpp manageNcmpcpp,
+    NS "alacritty" spawnAlacritty findAlacritty manageAlacritty,
+    NS "pulsemixer" spawnPulsemixer findPulsemixer managePulsemixer
+    ]
+    where 
+        spawnNcmpcpp = myTerminal ++ " -t music-player -e ncmpcpp"
+        findNcmpcpp = title =? "music-player"
+        manageNcmpcpp = customFloating $ W.RationalRect left top width height
+                                            where
+                                                height = 0.90
+                                                width = 0.90
+                                                top = 0.95 - height
+                                                left = 0.95 -width
+        spawnAlacritty = myTerminal ++ " -t notebook"
+        findAlacritty = title =? "notebook"
+        manageAlacritty = customFloating $ W.RationalRect left top width height
+                                            where
+                                                height = 1/3
+                                                width = 2/3
+                                                top = 1/6
+                                                left = 1/6
+        spawnPulsemixer = myTerminal ++ " -t pulsemixer -e pulsemixer"
+        findPulsemixer = title =? "pulsemixer"
+        managePulsemixer = customFloating $ W.RationalRect left top width height
+                                            where
+                                                height = 1/3
+                                                width = 1/3
+                                                top = 1/6
+                                                left = 1/3
 
 ------------------------------------------------------------------------
 -- Key bindings
@@ -56,10 +90,17 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     --- launch a terminal
     [ ((modm,               xK_Return), spawn $ XMonad.terminal conf)
     --- launch rofi as drun
-    , ((modm,               xK_space     ), spawn "rofi -modi drun -show drun -icon-themes 'Papirus' -show-icons" )
+    , ((modm,               xK_space ), spawn "rofi -modi drun -show drun -icon-themes 'Papirus' -show-icons" )
     --- A little script to see video in mpv
     , ((modm,                   xK_y ), spawn "~/.Scripts/mpv-clipboard.sh")
     , ((modm,                   xK_i ), spawn "~/.xmonad/info.sh")
+    -----------------------------------------------------------------------
+
+    -----------------------------------------------------------------------
+    -- Scratchpads
+    , ((modm .|. controlMask, xK_p ), namedScratchpadAction scratchpads "pulsemixer")
+    , ((modm .|. controlMask, xK_Return), namedScratchpadAction scratchpads "alacritty")
+    , ((modm .|. controlMask, xK_m ), namedScratchpadAction scratchpads "ncmpcpp")
     -----------------------------------------------------------------------
 
     -----------------------------------------------------------------------
@@ -185,11 +226,13 @@ myLayout = avoidStruts (tiled ||| ThreeColMid 1 (3/100) (1/2) ||| Mirror tiled |
 
 ------------------------------------------------------------------------
 -- Window rules:
-myManageHook = composeAll
-    [ className =? "MPlayer"        --> doFloat
+myManageHook = composeAll [ 
+    className =? "MPlayer"          --> doFloat
     , className =? "Gimp"           --> doFloat
     , resource  =? "desktop_window" --> doIgnore
-    , resource  =? "kdesktop"       --> doIgnore ]
+    , resource  =? "kdesktop"       --> doIgnore 
+    , className =? "mpv"            --> doFloat
+    ] <+> namedScratchpadManageHook scratchpads
 
 ------------------------------------------------------------------------
 -- Event handling
@@ -200,7 +243,7 @@ myManageHook = composeAll
 -- return (All True) if the default handler is to be run afterwards. To
 -- combine event hooks use mappend or mconcat from Data.Monoid.
 --
-myEventHook = mempty
+myEventHook = ewmhDesktopsEventHook
 ------------------------------------------------------------------------
 
 ------------------------------------------------------------------------
@@ -244,7 +287,7 @@ main = do
         layoutHook         = myLayout,
         manageHook         = myManageHook,
         handleEventHook    = myEventHook,
-        logHook            = dynamicLogWithPP $ xmobarPP 
+        logHook            = dynamicLogWithPP . namedScratchpadFilterOutWorkspacePP $ xmobarPP 
                                 { ppOutput = hPutStrLn h 
                                 , ppHidden = id         
                                 , ppVisible = xmobarColor "#a0b8cf" ""

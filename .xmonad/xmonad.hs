@@ -17,6 +17,7 @@ import XMonad.Util.NamedScratchpad
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.EwmhDesktops
+import XMonad.Hooks.ManageHelpers
 
 -- Actions
 import XMonad.Actions.CopyWindow
@@ -42,11 +43,17 @@ myBorderWidth   = 2
 myModMask       = mod4Mask
 
 -- Workspaces
-myWorkspaces    = ["core","web","chat","misc1","misc2"]
+myWorkspaces    = ["Lavoro0","Web","Chat","Editor","Varie0","Varie1"]
 
 -- Border colors for unfocused and focused windows, respectively.
 myNormalBorderColor  = "#dddddd"
 myFocusedBorderColor = "#ff0000" 
+
+
+rectCentered :: Rational -> W.RationalRect
+rectCentered percentage = W.RationalRect offset offset percentage percentage
+    where
+        offset = (1 - percentage) / 2
 
 -- Scratchpads 
 scratchpads = [
@@ -58,20 +65,15 @@ scratchpads = [
     where 
         spawnNcmpcpp = myTerminal ++ " -t music-player -e ncmpcpp"
         findNcmpcpp = title =? "music-player"
-        manageNcmpcpp = customFloating $ W.RationalRect left top width height
-                                            where
-                                                height = 0.90
-                                                width = 0.90
-                                                top = 0.95 - height
-                                                left = 0.95 -width
+        manageNcmpcpp = customFloating $ rectCentered 0.5
         spawnAlacritty = myTerminal ++ " -t notebook"
         findAlacritty = title =? "notebook"
         manageAlacritty = customFloating $ W.RationalRect left top width height
                                             where
                                                 height = 1/3
-                                                width = 2/3
-                                                top = 1/6
-                                                left = 1/6
+                                                width = 1/3
+                                                top = 0.50
+                                                left = 0.50
         spawnPulsemixer = myTerminal ++ " -t pulsemixer -e pulsemixer"
         findPulsemixer = title =? "pulsemixer"
         managePulsemixer = customFloating $ W.RationalRect left top width height
@@ -89,7 +91,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     -- Programs
     --- launch a terminal
     [ ((modm,               xK_Return), spawn $ XMonad.terminal conf)
-    --- launch rofi as drun
+    --- launch rofi as drun 
     , ((modm,               xK_space ), spawn "rofi -modi drun -show drun -icon-themes 'Papirus' -show-icons" )
     --- A little script to see video in mpv
     , ((modm,                   xK_y ), spawn "~/.Scripts/mpv-clipboard.sh")
@@ -106,11 +108,11 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     -----------------------------------------------------------------------
     -- MultiMedia  controls
     --- Volume Up
-    , ((0, xF86XK_AudioRaiseVolume), spawn "pactl set-sink-volume @DEFAULT_SINK@ +5%" )
+    , ((0, xF86XK_AudioRaiseVolume), spawn "IncreaseVolume.sh" )
     --- Volume Down
-    , ((0, xF86XK_AudioLowerVolume), spawn "pactl set-sink-volume @DEFAULT_SINK@ -5%" )
+    , ((0, xF86XK_AudioLowerVolume), spawn "LowerVolume.sh" )
     --- Volume Mute Toggle
-    , ((0, xF86XK_AudioMute), spawn "pactl set-sink-mute @DEFAULT_SINK@ toggle")
+    , ((0, xF86XK_AudioMute), spawn "ToggleVolume.sh")
     --- Monitor Brightness Up
     , ((0, xF86XK_MonBrightnessUp), spawn "IncreaseLuce.sh")
     --- Monitor Brightness Down
@@ -120,11 +122,11 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     ---------------------------------------------------------------------
     -- Window's controls
     --- close focused window
-    , ((modm .|. shiftMask, xK_c     ), kill)
+    , ((modm, xK_c                  ), kill)
     --- Copy the focused window on all workspaces
     , ((modm,               xK_v    ), windows copyToAll)
     --- Resize viewed windows to the correct size
-    , ((modm,               xK_n     ), refresh)
+    , ((modm,               xK_n    ), refresh)
     --- Move focus to the next window
     , ((modm,               xK_Tab   ), windows W.focusDown)
     --- Move focus to the next window
@@ -227,11 +229,16 @@ myLayout = avoidStruts (tiled ||| ThreeColMid 1 (3/100) (1/2) ||| Mirror tiled |
 ------------------------------------------------------------------------
 -- Window rules:
 myManageHook = composeAll [ 
-    className =? "MPlayer"          --> doFloat
-    , className =? "Gimp"           --> doFloat
+    className =? "Gimp-2.10"        --> doFloat
+    , className =? "Gimp-2.10"      --> doShift "Editor"
     , resource  =? "desktop_window" --> doIgnore
     , resource  =? "kdesktop"       --> doIgnore 
     , className =? "mpv"            --> doFloat
+    , className =? "firefox"        --> doShift "Web"
+    , className =? "Zenity"         --> doFloat
+    , className =? "Ankama Launcher" --> doShift "Lavoro0"
+    , className =? "com-ankamagames-wakfu-client-WakfuClient" --> doShift "Lavoro0"
+    , className =? "FLTK"           --> doFloat
     ] <+> namedScratchpadManageHook scratchpads
 
 ------------------------------------------------------------------------
@@ -243,7 +250,7 @@ myManageHook = composeAll [
 -- return (All True) if the default handler is to be run afterwards. To
 -- combine event hooks use mappend or mconcat from Data.Monoid.
 --
-myEventHook = ewmhDesktopsEventHook
+myEventHook = mempty
 ------------------------------------------------------------------------
 
 ------------------------------------------------------------------------
@@ -255,19 +262,21 @@ myEventHook = ewmhDesktopsEventHook
 --
 -- By default, do nothing.
 myStartupHook =do
-            spawnOnce "xwallpaper --zoom ~/Immagini/Wallpapers/0010.jpg"
+            spawnOnce "fixscreen.sh"
             spawnOnce "xsetroot -cursor_name left_ptr"
             spawnOnce "nm-applet &"
             spawnOnce "picom --experimental-backends &"
             spawnOnce "dunst &"
-            spawnOnce "redshift-gtk &"
-            spawnOnce "stalonetray &"
+            spawnOnce "trayer --edge top --align right --widthtype pixel --width 80 --padding 6 --SetDockType true --SetPartialStrut true --expand true --transparent false --alpha 0 --tint 0x282c34  --height 20 --monitor primary &"
+	    spawnOnce "xwallpaper --zoom ~/Immagini/Wallpapers/0103.jpg"
+            spawn "~/.xmonad/volPipe.sh"
 ------------------------------------------------------------------------
 
 ------------------------------------------------------------------------
 -- The real WM
 main = do
-    h <- spawnPipe "xmobar ~/.xmonad/xmobarrc"
+    i <- spawnPipe "xmobar -x 0 ~/.xmonad/xmobarrc0"
+    h <- spawnPipe "xmobar -x 1 ~/.xmonad/xmobarrc1"
     xmonad (docks def{
       -- simple stuff
         terminal           = myTerminal,
@@ -288,9 +297,10 @@ main = do
         manageHook         = myManageHook,
         handleEventHook    = myEventHook,
         logHook            = dynamicLogWithPP . namedScratchpadFilterOutWorkspacePP $ xmobarPP 
-                                { ppOutput = hPutStrLn h 
+                                { ppOutput = \x -> hPutStrLn h x
+                                                >> hPutStrLn i x
                                 , ppHidden = id         
-                                , ppVisible = xmobarColor "#a0b8cf" ""
+                                , ppVisible = wrap "(" ")"
                                 , ppHiddenNoWindows = xmobarColor "#606060" ""
                                 , ppSep = " | "
                                 },

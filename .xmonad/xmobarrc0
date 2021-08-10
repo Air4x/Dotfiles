@@ -12,13 +12,13 @@ Config {
    , bgColor =      "black"
    , fgColor =      "#ffffff"
    , position =     TopW L 100
-   , border =       BottomB
+   , border =       NoBorder
    , borderColor =  "#646464"
 
    -- layout
    , sepChar =  "%"   -- delineator between plugin names and straight text
    , alignSep = "}{"  -- separator between left-right alignment
-   , template = "<icon=haskell_20.xpm/> %StdinReader% }{ %mpd%  %LIRM% | %coretemp% | %memory% | %dynnetwork% | %battery% | %date% | %trayerpad%"
+   , template = "<icon=haskell_20.xpm/> %StdinReader% }{ %LIRM%  %coretemp%  %memory%  %dynnetwork%   %volumePipe%  %battery%  %date%  %trayerpad%"
 
    -- general behavior
    , lowerOnStart =     True    -- send to bottom of window stack on start
@@ -60,7 +60,7 @@ Config {
 
         , Run StdinReader
         -- cpu activity monitor
-        , Run MultiCpu       [ "--template" , "Cpu: <total0>%|<total1>%"
+        , Run MultiCpu       [ "--template" , "Cpu: 1:<total0>% 2:<total1>%"
                              , "--Low"      , "50"         -- units: %
                              , "--High"     , "85"         -- units: %
                              , "--low"      , "green"
@@ -87,7 +87,7 @@ Config {
                              ] 10
 
         -- battery monitor
-        , Run Battery        [ "--template" , "Batt: <acstatus>"
+        , Run Battery        [ "--template" , "Batt: <left>%(<acstatus>)"
                              , "--Low"      , "10"        -- units: %
                              , "--High"     , "80"        -- units: %
                              , "--low"      , "red"
@@ -106,8 +106,8 @@ Config {
         -- time and date indicator
         --   (%F = y-m-d date, %a = day of week, %T = h:m:s time)
         , Run Date           "<fc=#ffffff>%d-%m-%y (%a) %T</fc>" "date" 10
-        , Run Com "~/.xmonad/stanalonetray-padding.sh" [] "trayerpad" 20
-        , Run MPD ["-t", "<state>: <track>"] 10
+        , Run CommandReader "~/.xmonad/stanalonetray-padding.sh" "trayerpad"
+        , Run PipeReader "/tmp/volumePipe0" "volumePipe"
 
         -- keyboard layout indicator
         -- , Run Kbd            [ ("us(dvorak)" , "<fc=#00008B>DV</fc>")

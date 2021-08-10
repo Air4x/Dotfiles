@@ -1,0 +1,14 @@
+#!/bin/python3
+
+import os
+import random
+
+path="/home/mario/Immagini/Wallpapers/CheWallpapers"
+
+files = os.listdir(path)
+
+wallpaper = path + "/" + random.choice(files)
+
+command = "xwallpaper --zoom " + wallpaper
+
+os.system(command)

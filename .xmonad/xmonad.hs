@@ -11,7 +11,6 @@ import Data.Monoid
 -- Utils
 import XMonad.Util.Run
 import XMonad.Util.SpawnOnce
-import XMonad.Util.NamedScratchpad
 
 -- Hooks
 import XMonad.Hooks.ManageDocks
@@ -24,6 +23,7 @@ import XMonad.Actions.CopyWindow
 
 -- Layouts
 import XMonad.Layout.ThreeColumns
+import XMonad.Layout.Spacing
 
 -- Names and options
 --- Default terminal
@@ -43,45 +43,11 @@ myBorderWidth   = 2
 myModMask       = mod4Mask
 
 -- Workspaces
-myWorkspaces    = ["Lavoro0","Web","Chat","Editor","Varie0","Varie1"]
+myWorkspaces    = ["Lavoro","Web","Chat","Editor","Varie0","Varie1"]
 
 -- Border colors for unfocused and focused windows, respectively.
 myNormalBorderColor  = "#dddddd"
 myFocusedBorderColor = "#ff0000" 
-
-
-rectCentered :: Rational -> W.RationalRect
-rectCentered percentage = W.RationalRect offset offset percentage percentage
-    where
-        offset = (1 - percentage) / 2
-
--- Scratchpads 
-scratchpads = [
-    -- NS name cmd query hook
-    NS "ncmpcpp" spawnNcmpcpp findNcmpcpp manageNcmpcpp,
-    NS "alacritty" spawnAlacritty findAlacritty manageAlacritty,
-    NS "pulsemixer" spawnPulsemixer findPulsemixer managePulsemixer
-    ]
-    where 
-        spawnNcmpcpp = myTerminal ++ " -t music-player -e ncmpcpp"
-        findNcmpcpp = title =? "music-player"
-        manageNcmpcpp = customFloating $ rectCentered 0.5
-        spawnAlacritty = myTerminal ++ " -t notebook"
-        findAlacritty = title =? "notebook"
-        manageAlacritty = customFloating $ W.RationalRect left top width height
-                                            where
-                                                height = 1/3
-                                                width = 1/3
-                                                top = 0.50
-                                                left = 0.50
-        spawnPulsemixer = myTerminal ++ " -t pulsemixer -e pulsemixer"
-        findPulsemixer = title =? "pulsemixer"
-        managePulsemixer = customFloating $ W.RationalRect left top width height
-                                            where
-                                                height = 1/3
-                                                width = 1/3
-                                                top = 1/6
-                                                left = 1/3
 
 ------------------------------------------------------------------------
 -- Key bindings
@@ -95,14 +61,12 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm,               xK_space ), spawn "rofi -modi drun -show drun -icon-themes 'Papirus' -show-icons" )
     --- A little script to see video in mpv
     , ((modm,                   xK_y ), spawn "~/.Scripts/mpv-clipboard.sh")
-    , ((modm,                   xK_i ), spawn "~/.xmonad/info.sh")
-    -----------------------------------------------------------------------
-
-    -----------------------------------------------------------------------
-    -- Scratchpads
-    , ((modm .|. controlMask, xK_p ), namedScratchpadAction scratchpads "pulsemixer")
-    , ((modm .|. controlMask, xK_Return), namedScratchpadAction scratchpads "alacritty")
-    , ((modm .|. controlMask, xK_m ), namedScratchpadAction scratchpads "ncmpcpp")
+    --- A little script to see some info about volume, mpd, and backlight
+    , ((modm,                   xK_i ), spawn "info.sh")
+    --- Emacsclient
+    , ((modm .|. controlMask,	xK_e ), spawn "emacsclient -c")
+    --- Firefox
+    , ((modm .|. controlMask,   xK_w ), spawn "firefox")
     -----------------------------------------------------------------------
 
     -----------------------------------------------------------------------
@@ -215,7 +179,7 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
 
 ------------------------------------------------------------------------
 -- Layouts:
-myLayout = avoidStruts (tiled ||| ThreeColMid 1 (3/100) (1/2) ||| Mirror tiled ||| Full)
+myLayout = avoidStruts (spacing 8 $tiled ||| ThreeColMid 1 (3/100) (1/2) ||| Mirror tiled ||| Full)
   where
      -- Master-Slave
      tiled   = Tall nmaster delta ratio
@@ -236,10 +200,10 @@ myManageHook = composeAll [
     , className =? "mpv"            --> doFloat
     , className =? "firefox"        --> doShift "Web"
     , className =? "Zenity"         --> doFloat
-    , className =? "Ankama Launcher" --> doShift "Lavoro0"
-    , className =? "com-ankamagames-wakfu-client-WakfuClient" --> doShift "Lavoro0"
+    , className =? "Ankama Launcher" --> doShift "Lavoro"
+    , className =? "com-ankamagames-wakfu-client-WakfuClient" --> doShift "Lavoro"
     , className =? "FLTK"           --> doFloat
-    ] <+> namedScratchpadManageHook scratchpads
+    ]
 
 ------------------------------------------------------------------------
 -- Event handling
@@ -250,7 +214,7 @@ myManageHook = composeAll [
 -- return (All True) if the default handler is to be run afterwards. To
 -- combine event hooks use mappend or mconcat from Data.Monoid.
 --
-myEventHook = mempty
+myEventHook = ewmhDesktopsEventHook
 ------------------------------------------------------------------------
 
 ------------------------------------------------------------------------
@@ -267,17 +231,17 @@ myStartupHook =do
             spawnOnce "nm-applet &"
             spawnOnce "picom --experimental-backends &"
             spawnOnce "dunst &"
-            spawnOnce "trayer --edge top --align right --widthtype pixel --width 80 --padding 6 --SetDockType true --SetPartialStrut true --expand true --transparent false --alpha 0 --tint 0x282c34  --height 20 --monitor primary &"
-	    spawnOnce "xwallpaper --zoom ~/Immagini/Wallpapers/0103.jpg"
-            spawn "~/.xmonad/volPipe.sh"
+	    spawnOnce "wallpaper-set.sh"
+            spawnOnce "blueman-applet"
+            spawnOnce "polybar main"
 ------------------------------------------------------------------------
 
 ------------------------------------------------------------------------
 -- The real WM
 main = do
     i <- spawnPipe "xmobar -x 0 ~/.xmonad/xmobarrc0"
-    h <- spawnPipe "xmobar -x 1 ~/.xmonad/xmobarrc1"
-    xmonad (docks def{
+    h <- spawnPipe "xmobar -x 1 ~/.xmonad/xmobarrc0"
+    xmonad (ewmh (docks def{
       -- simple stuff
         terminal           = myTerminal,
         focusFollowsMouse  = myFocusFollowsMouse,
@@ -296,14 +260,15 @@ main = do
         layoutHook         = myLayout,
         manageHook         = myManageHook,
         handleEventHook    = myEventHook,
-        logHook            = dynamicLogWithPP . namedScratchpadFilterOutWorkspacePP $ xmobarPP 
-                                { ppOutput = \x -> hPutStrLn h x
-                                                >> hPutStrLn i x
+        logHook            = dynamicLogWithPP $ xmobarPP 
+                                { ppOutput = \x -> hPutStrLn i x
+                                                >> hPutStrLn h x
                                 , ppHidden = id         
                                 , ppVisible = wrap "(" ")"
                                 , ppHiddenNoWindows = xmobarColor "#606060" ""
                                 , ppSep = " | "
+                                , ppOrder = \(ws:l:t:ex) -> [ws,l, t]
                                 },
         startupHook        = myStartupHook
-    })
+    }))
 

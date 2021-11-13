@@ -1,0 +1,45 @@
+; -*-lisp-*-
+
+(defpoll time_hour :interval "30m"
+  `date +%H`)
+
+(defpoll time_min :interval "30s"
+  `date +%M`)
+
+(defpoll time_day :interval "1s"
+  `date +%A`)
+
+(defwindow example
+           :monitor 0
+           :class "main_window"
+	   :geometry (geometry :x "100px"
+	   	     	       :y "50px"
+			       :width "10%"
+			       :height "50px"
+			       :anchor "top left")
+	   :stacking "fg"
+	   :windowtype "normal"
+	   :wm-ignore true
+	   :visible false
+ (orologio))
+
+(defwidget orologio []
+  (box :orientation "h"
+       :halign "baseline"
+       :spacing 0
+       (box :orientation "v"
+	    :halign "baseline"
+	    :spacing -20
+	    :space-evenly true
+	    :class "bg"
+	    (label :text time_hour
+		   :class "time_hour_label"
+		   :halign "start")
+	    (label :text time_min
+		   :class "time_min_label"
+		   :halign "fill"))
+       (box :class "bg"
+	    (label :text time_day
+		   :class "time_day_label"
+		   :valign "center"
+		   :halign "start"))))

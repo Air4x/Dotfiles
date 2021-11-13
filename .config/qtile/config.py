@@ -1,29 +1,3 @@
-# Copyright (c) 2010 Aldo Cortesi
-# Copyright (c) 2010, 2014 dequis
-# Copyright (c) 2012 Randall Ma
-# Copyright (c) 2012-2014 Tycho Andersen
-# Copyright (c) 2012 Craig Barnes
-# Copyright (c) 2013 horsik
-# Copyright (c) 2013 Tao Sauvage
-#
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in
-# all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-# SOFTWARE.
-
 from typing import List  # noqa: F401
 
 import os
@@ -31,11 +5,9 @@ import subprocess
 from libqtile import bar, layout, widget, hook
 from libqtile.config import Click, Drag, Group, Key, Match, Screen, KeyChord
 from libqtile.lazy import lazy
-from libqtile.utils import guess_terminal
-from libqtile.window import Window
 
 mod = "mod4"
-terminal = guess_terminal()
+terminal = "alacritty"
 
 colors = [["#0f111b", "#0f111b"], # background 0
           ["#0f111b", "#2e3459"], # black 1
@@ -90,14 +62,13 @@ keys = [
     Key([mod, "control"], "r", lazy.restart(), desc="Restart Qtile"),
     Key([mod, "control"], "q", lazy.shutdown(), desc="Shutdown Qtile"),
     # How to run program
-    Key([mod], "r", lazy.spawn("rofi -show run"),
+    Key([mod], "r", lazy.spawn("rofi -modi drun -show drun -icon-themes 'Papirus' -show-icons"),
         desc="Spawn rofi as app launcher"),
     Key([mod], "Return", lazy.spawn(terminal), desc="Launch terminal"),
 
     KeyChord([mod], "e", [
         Key([], "c", lazy.spawn("chromium"), lazy.ungrab_chord()),
-        Key([], "b", lazy.spawn("firefox")),
-        Key([], "f", lazy.spawn("termite --class=float -e ranger"))],
+        Key([], "b", lazy.spawn("firefox"))],
         mode="programmi"),
     # Multimedia and multifunction keys
     Key([], "XF86AudioMute", lazy.spawn("pactl set-sink-mute @DEFAULT_SINK@ toggle")),
@@ -109,8 +80,8 @@ keys = [
 ]
 
 groups = [
-    Group("1", label="web"),
-    Group("2", label="code", ),
+    Group("1", label="code"),
+    Group("2", label="web", ),
     Group("3", label="mail"),
     Group("4", label="media"),
     Group("5", label="chat"),
@@ -133,18 +104,18 @@ for i in groups:
 
 layouts = [
     # layout.Columns(border_focus_stack=colors[5]),
-    # layout.Max(),
+    layout.Max(),
     # Try more layouts by unleashing below layouts.
     # layout.Stack(num_stacks=2),
     # layout.Bsp(),
     # layout.Matrix(),
     layout.MonadTall(),
-    # layout.MonadWide(),
+    layout.MonadWide(),
     # layout.RatioTile(),
     # layout.Tile(),
-    # layout.TreeTab(),
+    layout.TreeTab(),
     # layout.VerticalTile(),
-    # layout.Zoomy(),
+    layout.Zoomy(),
 ]
 
 
@@ -155,6 +126,7 @@ widget_defaults = dict(
     padding=2,
     background = colors[0]
 )
+
 extension_defaults = widget_defaults.copy()
 
 screens = [
@@ -190,6 +162,38 @@ screens = [
             24,
         ),
     ),
+    Screen(
+        bottom=bar.Bar(
+            [
+                widget.CurrentLayout(foreground=colors[9]),
+                #----GroupBox----#
+                widget.TextBox(text=Left_Text, foreground=colors[4], fontsize=55, padding=-2),
+                widget.GroupBox(background=colors[4], hide_unused= False),
+                widget.TextBox(text=Right_Text, foreground=colors[4], fontsize=55, padding=-2),
+                widget.Chord(foreground=colors[4], fmt='--{}--'),
+                #----WindowName----#
+                widget.WindowName(foreground=colors[9]),
+                #----Mpd----#
+                widget.Mpd2(foreground=colors[9]),
+                #----Volume----#
+                widget.TextBox(text=Left_Text, foreground=colors[3],background=colors[0], fontsize=55, padding=-2),
+                widget.Volume(foreground=colors[9],cardid= '0', background=colors[3], padding=1),
+                widget.TextBox(text=Right_Text, foreground=colors[3], padding=-2, fontsize=55),
+                #----Battery----#
+                widget.TextBox(text=Left_Text, foreground=colors[5], fontsize=55, padding=-2),
+                widget.Battery(foreground=colors[9], background=colors[5]),
+                widget.TextBox(text=Right_Text, foreground=colors[5], padding=-2, fontsize=55),
+                #----Clock----# 
+                widget.TextBox(text=Left_Text,foreground=colors[7], fontsize=55, padding=-2),
+                widget.Clock(format='%Y-%m-%d %a %I:%M %p',foreground=colors[9], background=colors[7]),
+                widget.TextBox(text=Right_Text, foreground=colors[7], padding=-2, fontsize=55),
+                #----Systray----#
+                widget.Systray(),
+                widget.QuickExit(foreground=colors[9]),
+            ],
+            24,
+        ),
+    )
 ]
 
 # Drag floating layouts.
@@ -203,7 +207,6 @@ mouse = [
 
 dgroups_key_binder = None
 dgroups_app_rules = []  # type: List
-main = None  # WARNING: this is deprecated and will be removed soon
 follow_mouse_focus = True
 bring_front_click = False
 cursor_warp = False
@@ -220,6 +223,7 @@ floating_layout = layout.Floating(float_rules=[
 ])
 auto_fullscreen = True
 focus_on_window_activation = "smart"
+reconfigure_screens = True
 
 @hook.subscribe.startup_once
 def autostart():

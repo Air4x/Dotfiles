@@ -1,7 +1,5 @@
 #!/bin/lua5.4
-
-path  = "/home/mario/.local/share/todo/todo.txt"
-
+path = "/home/mario/.local/share/todo/todo.txt"
 file = io.open(path)
 tasks  = {}
 number = 1

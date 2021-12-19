@@ -4,3 +4,6 @@
 /.xmonad/xmonad.o
 /.config/nvim/colors
 /.Scripts/Ankama_Launcher
+/.Scripts/comma
+/.Scripts/tombola
+/.Scripts/initscreen.sh

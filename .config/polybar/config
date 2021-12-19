@@ -74,7 +74,8 @@ tray-position = right
 tray-padding = 2
 tray-background = #0063ff
 
-;override-redirect = true
+wm-restack = bspwm
+override-redirect = true
 
 scroll-up = bspwm-desknext
 scroll-down = bspwm-deskprev
@@ -174,12 +175,12 @@ icon-3 = 4;
 icon-4 = 5;
 icon-5 = 6;
 
-label-active = %icon%
+label-active = %name%
 label-active-foreground = #ffffff
 label-active-background = ${colors.buffer}
 label-active-underline = ${colors.nord7}
 label-active-padding = 1
-label-occupied = %icon%
+label-occupied = %name%
 label-occupied-underline = #555555
 
 label-empty = %name%
